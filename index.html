@@ -366,23 +366,38 @@ footer{
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-const form = document.getElementById('reservationForm');
-form.addEventListener('submit', async function(e) {
+emailjs.init('TU_PUBLIC_KEY');
+
+document.getElementById('reservationForm').addEventListener('submit', async function(e) {
   e.preventDefault();
-  const btn = form.querySelector('input[type=submit]');
-  btn.value = 'Sending...';btn.disabled = true;
-  const res = await fetch(form.action, {
-    method:'POST', body: new FormData(form), headers:{Accept:'application/json'}
-  });
-  if (res.ok) {
-    form.style.display = 'none';
-    document.querySelector('.form-note').style.display = 'none';
-    document.getElementById('success-msg').style.display = 'block';
-  } else {
-    btn.value = 'Send Reservation Request'; btn.disabled = false;
-    alert('Something went wrong. Please call us at 407-873-8404.');
-  }
+  const btn = this.querySelector('input[type=submit]');
+  btn.value = 'Sending...'; btn.disabled = true;
+
+  const data = {
+    full_name:        this.full_name.value,
+    phone:            this.phone.value,
+    email:            this.email.value,
+    pickup_location:  this.pickup_location.value,
+    destination:      this.destination.value,
+    pickup_date:      this.pickup_date.value,
+    pickup_time:      this.pickup_time.value,
+    passengers:       this.passengers.value,
+    service_type:     this.service_type.value,
+    special_requests: this.special_requests.value,
+  };
+
+  emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', data)
+    .then(() => {
+      this.style.display = 'none';
+      document.querySelector('.form-note').style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+    })
+    .catch(() => {
+      btn.value = 'Send Reservation Request'; btn.disabled = false;
+      alert('Error. Please call 407-873-8404.');
+    });
 });
 </script>
 </body>
