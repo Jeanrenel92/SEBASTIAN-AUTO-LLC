@@ -128,7 +128,7 @@ document.getElementById('reservationForm').addEventListener('submit', async func
   generateReservationPDF(data);
 
   // 2. Send to Formspree
-  const res = await fetch('https://formspree.io/f/mnjkbaow', {
+  const res = await fetch('https://api.web3forms.com/submit', {
     method: 'POST',
     body: new FormData(this),
     headers: { 'Accept': 'application/json' }
